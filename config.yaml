@@ -1,0 +1,42 @@
+# config.yaml
+tunnel:
+  server_url: "http://192.168.0.19"
+  address: "192.168.0.19:8702"
+
+database:
+  path: "file_identities.db"   # SQLite数据库文件路径
+
+logging:
+  path: "app.log"              # 日志文件路径
+  level: "INFO"                # 日志级别（DEBUG, INFO, WARN, ERROR）
+
+hash:
+  algorithm: "SHA1"            # 哈希算法（SHA1, MD5, SHA256等）
+
+retry:
+  max_attempts: 3              # 最大重试次数
+  initial_backoff_ms: 500      # 初始重试等待时间（毫秒）
+  backoff_multiplier: 2        # 重试等待时间的倍增因子
+
+family:
+  threshold1: 10240    # 1MB
+  threshold2: 10485760   # 10MB
+
+server:
+  address: ":8080"             # HTTP服务器监听地址
+
+classification:
+  allowed_secret:
+    - level: "100"
+      code: "1"
+      name: "一般"
+    - level: "200"
+      code: "2"
+      name: "机密"
+    - level: "300"
+      code: "3"
+      name: "绝密"
+  default_secret:
+      level: "100"
+      code: "1"
+      name: "一般"
