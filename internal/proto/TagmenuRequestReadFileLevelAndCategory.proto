@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+import "google/protobuf/wrappers.proto";
+
+package docmap.protobuf.ipc;
+
+option go_package = "./docmap/protobuf/ipc";
+// 获取指定文件的级别和类别
+message TagmenuRequestReadFileLevelAndCategory{
+	repeated google.protobuf.StringValue	filePath = 1;		// 文件路径
+}

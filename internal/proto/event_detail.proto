@@ -1,0 +1,278 @@
+syntax = "proto3";
+
+package docmap.exchange.model;
+
+option go_package = "./docmap/exchange/model";
+
+// delete 事件
+message EventDelete {
+  string entityIdentity = 1;
+  repeated string contentIdentity = 2;
+  string path = 3;
+  string filename = 4;
+  string driveType = 5;
+  string securityLevel = 6;
+  repeated string classificationType = 7;
+  uint64 createTime = 8;
+  uint64 modifyTime = 9;
+  string sha1 = 10;
+  uint64 size = 11;
+  string ext = 12;
+  string encryptChannel = 13;
+  string originFilePath = 14;				// 如果是回收站中的文件，删除时这里存放着进回收站前的路径
+  int32 encrypted = 15;								// 是否被客户端加密过(0:未加密;1:已加密)
+}
+
+// copy 事件
+message EventCopy {
+  string sourceFile = 1;
+   EventDelete sourceFileInfo = 2;			// 重定向打TAG前的文件信息（避免来源不可访问时，读取不到文件信息）
+   string redirectFile = 3;
+  string destinationFile = 4;
+   string destinationFileDriveType = 5;		// 存放目标路径的盘符类型，防止目标路径不可访问导致服务端拼不出文件信息
+   EventDelete overwriteFile = 6;
+   bool fromManual = 7;						// 手动
+}
+
+// move 事件
+message EventMove {
+  string sourceFile = 1;
+   EventDelete sourceFileInfo = 2;			// 避免来源不可访问时，读取不到文件信息
+  string destinationFile = 3;
+   string destinationFileDriveType = 4;		// 存放目标路径的盘符类型，防止目标路径不可访问导致服务端拼不出文件信息
+  EventDelete overwriteFile = 5;
+   bool fromManual = 6;						// 手动
+}
+
+// saveAs 事件
+message EventSaveAs {
+  string sourceFile = 1;
+  string destinationFile = 2;
+}
+
+// cdburn 事件
+message EventCDBurn {
+  string sourceFile = 1;
+   EventDelete sourceFileInfo = 2;			// 重定向打TAG前的文件信息（避免来源不可访问时，读取不到文件信息）
+   string redirectFile = 3;
+  string destinationFile = 4;
+}
+
+// create 事件
+message EventCreate {
+  string destinationFile = 1;
+}
+
+// 压缩与解压事件里使用的文件信息块
+message ZipFile{
+	string					file = 1;				// 文件路径
+	 EventDelete	fileinfo = 2;			// 预取的文件信息(当文件在边界外时有效)
+}
+
+// ZipMap符合属性
+message ZipMap{
+	ZipFile	src = 1;
+	string	des = 2;
+}
+
+// zip 事件
+message EventZip {
+  repeated ZipMap	sourceFiles = 1;
+  repeated ZipFile	destinationFiles = 2;
+}
+
+// unzip 事件
+message EventUnzip {
+  repeated ZipFile sourceFiles = 1;
+  repeated ZipFile destinationFiles = 2;
+}
+
+// edit 事件
+message EventEdit {
+  string destinationFile = 1;
+}
+
+// rename 事件
+message EventRename {
+  string sourceFile = 1;
+  string destinationFile = 2;
+   bool fromManual = 3;			// 手动重命名
+}
+
+
+// recycle 事件
+message EventRecycle {
+  string sourceFile = 1;
+  string destinationFile = 2;
+}
+
+// restore 事件
+message EventRestore {
+  string sourceFile = 1;
+  string destinationFile = 2;
+}
+
+message NetFileInfo{
+	string		fileUrl = 1;		// 文件网址
+}
+
+message ServerAddress{
+	string		ipv4 = 1;			// ipv4地址
+	string		ipv6 = 2;			// ipv6地址
+	int32		port = 3;			// 端口
+	string		url = 4;			// 网址
+}
+
+// upload 事件
+message EventUpload{
+	string protocol = 1;							// 网络传输协议
+	string sourceFile = 2;							// 要上传的本地文件路径
+	repeated ServerAddress destinationServers = 3;	// 目标服务器地址信息
+	string destinationFile = 4;						// 上传重定向文件的信息
+	NetFileInfo destinationNetFile = 5;				// 目标网络文件的信息
+}
+
+// download 事件
+message EventDownload{
+	string	protocol = 1;							// 网络传输协议
+	repeated ServerAddress sourceServers = 2;		// 要下载的服务器地址信息
+	NetFileInfo	sourceNetFile = 3;					// 来源文件网络信息
+	string sourceFile = 4;							// 来源下载文件
+	string destinationFile = 5;						// 目标文件的路径
+}
+
+// change_attributes事件
+message EventChangeAttributes{
+	string	destinationFile = 1;					// 要改变属性的文件路径
+	uint32	attributes = 2;							// 要改变的属性值
+}
+
+// ftpsend事件
+message EventFtpSend{
+	string sourceFile = 1;							// 要上传的本地文件路径
+	string destinationFileTagFileId = 2;			// 上传文件的TAGID
+	repeated ServerAddress destinationServers = 3;	// 目标服务器地址信息
+	NetFileInfo destinationFile = 4;				// 上传后远程保存文件的信息
+}
+
+// kill事件
+message EventKill{
+	string destinationFile = 1;						// 要终止运行的程序路径
+}
+
+// run事件
+message EventRun{
+	string destinationFile = 1;						// 要运行的程序路径
+}
+
+// BeginEdit事件
+message EventBeginEdit{
+	string destinationFile = 1;						// 被编辑的文件路径
+	uint64 beginTime = 2;							// 文件第一次被编辑的时间，Unix时间戳，毫秒
+}
+
+// EndEdit事件
+message EventEndEdit{
+	string destinationFile = 1;						// 被编辑的文件路径
+	uint64 endTime = 2;								// 文件关闭前最后一次被编辑的时间，Unix时间戳，毫秒
+}
+
+// BeginRead事件
+message EventBeginRead{
+	string destinationFile = 1;						// 被阅读的文件路径
+	uint64 beginTime = 2;							// 文件第一次被打开的时间，Unix时间戳，毫秒
+	uint64 hwnd = 3;								// 文件对应的窗口
+}
+
+// EndRead事件
+message EventEndRead{
+	string destinationFile = 1;						// 被阅读的文件路径
+	uint64 endTime = 2;								// 文件最后关闭的时间，Unix时间戳，毫秒
+	uint64 hwnd = 3;								// 文件对应的窗口
+}
+
+message Content{
+	uint32	format = 1;								// 内容的格式代码
+	uint32	size = 2;								// 内容的字节大小
+	string	md5 = 3;								// 内容的md5编码值
+}
+
+// CopyContent事件
+message EventCopyContent{
+	string	sourceFile = 1;							// 复制内容的来源文件路径
+	repeated Content	contents = 2;				// 复制内容清单
+}
+
+// PasteContent事件
+message EventPasteContent{
+	string	destinationFile = 1;					// 被粘贴修改的目的文件路径
+	repeated Content	contents = 2;				// 被粘贴的内容
+	uint64	destinationWnd = 3;						// 目标窗口句柄（目标文档未保存时需要它）
+}
+
+// 粘贴事件（内部）
+message EventPasteContent_{
+	string sourceFile = 1;
+	string destinationFile = 2;
+	uint64 destinationWnd = 3;						// 目标窗口句柄（策略截屏保护需要它）
+}
+
+// encrypt事件
+message EventEncrypt{
+	string		sourceFile = 1;						// 加密来源文件
+	string		destinationFile = 2;				// 加密目标文件
+}
+
+// decrypt事件
+message EventDecrypt{
+	string		destinationFile = 1;				// 解密目标文件
+}
+
+// InsertFile事件
+message EventInsertFile{
+	string		sourceFile = 1;						// 来源文件
+	string		destinationFile = 2;				// 目标文件
+	repeated string	insertedFile = 3;				// 被插入的文件
+	uint64		destinationWnd = 4;					// 目标窗口句柄（目标文档未保存时需要它）
+}
+
+
+// 重命名文件夹事件
+message EventRenameFolder{
+	string		srcFolder = 1;			// 来源文件夹路径
+	string		desFolder = 2;			// 目标文件夹路径
+}
+
+// 新增：移动文件夹事件
+message EventMoveFolder{
+	string		srcFolder = 1;			// 来源文件夹路径
+	string		desFolder = 2;			// 目标文件夹路径
+}
+
+// 新增：彻底删除文件夹事件
+message EventDeleteFolder{
+	string		srcFolder = 1;			// 来源文件夹路径
+}
+
+// 新增：把文件夹移到回收站事件
+message EventRecycleFolder{
+	string		srcFolder = 1;			// 来源文件夹路径
+	string		desFolder = 2;			// 目标文件夹路径
+}
+
+// 新增：从回收站还原文件夹事件
+message EventRestoreFolder{
+	string		srcFolder = 1;			// 来源文件夹路径
+	string		desFolder = 2;			// 目标文件夹路径
+}
+
+// 修改注册表事件
+message EventChangeRegistryValue{
+	string		regKeyPath = 1;			// 被修改的注册表键路径
+	string		regValueName = 2;		// 被修改的注册表值名称
+}
+
+// 打印事件
+message EventPrint{
+	string		destinationFile = 1;				// 要被打印的文件
+}

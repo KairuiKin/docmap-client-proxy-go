@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+import "google/protobuf/wrappers.proto";
+
+package docmap.protobuf.ipc;
+
+option go_package = "./docmap/protobuf/ipc";
+// 移除指定目录的标记
+message TagmenuRequestRemoveFolderUserDatas{
+	google.protobuf.BoolValue			recursive = 1;		// 是否同时移除子目录的标记
+	repeated google.protobuf.StringValue	dirs = 2;	// 要移除标记的目录
+}

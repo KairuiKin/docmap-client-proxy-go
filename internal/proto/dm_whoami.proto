@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package docmap.message.api.model;
+
+option go_package = "./docmap/message/model";
+
+message DMWhoAmIReq {
+  uint64 userId = 1;
+  string accessToken = 2;
+  string deviceId = 3;
+}
+
+message DMWhoAmIResp {
+}

@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+import "tag.proto";
+import "encrypt_method.proto";
+
+package docmap.exchange.model;
+
+option go_package = "./docmap/exchange/model";
+
+message Redirect {
+    string filePath = 1;
+    string redirectFilePath = 2;
+    bool  newFileId = 3;             // 是否新建文件ID
+    EncryptMethod encryptMethod = 4; // 加密方式
+    uint32 processId = 7;            // 重定向进程的ID
+}
+
+message RedirectResponse {
+    string filePath = 1;
+    string redirectFilePath = 2;
+    repeated Tag tags = 3;
+    enum RedirectResult{
+        SUCCESS = 0;                    // 成功
+        COPY_FAILED = 1;                // 拷贝文件失败
+        EXPIRED = 2;                    // 写入的TAG过期了
+        TIMEOUT = 3;                    // 超时
+        UNPACK_FAILED = 4;              // 解包载荷失败
+        READ_TAG_FAILED = 5;            // 读原始TAG失败
+        ENCRYPT_FAILED = 6;             // 加密失败
+    }
+    RedirectResult result = 4;
+    bool encrypted = 5;                 // 是否加密
+    string redirectFileId = 6;          // 重定向文件的ID
+}

@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package docmap.exchange.model;
+
+option go_package = "./docmap/exchange/model";
+
+message WhoAmI {
+    string clientInstanceId = 1;
+    string app = 2;
+    string processId = 3;
+}
+
+message WhoAmIResponse {
+}

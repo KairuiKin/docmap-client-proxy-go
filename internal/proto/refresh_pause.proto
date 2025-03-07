@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package docmap.exchange.model;
+
+option go_package = "./docmap/exchange/model";
+
+message RefreshPause{
+	bool	pause = 1;			// true: 暂停刷新; false: 继续刷新
+}
+
+message RefreshPauseResponse{
+	bool	succ = 1;			// true: 成功; false: 失败
+}

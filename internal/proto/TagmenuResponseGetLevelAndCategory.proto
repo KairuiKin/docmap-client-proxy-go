@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+import "google/protobuf/wrappers.proto";
+
+package docmap.protobuf.ipc;
+
+option go_package = "./docmap/protobuf/ipc";
+
+// 密级
+message DocumentSecureLevel{
+	google.protobuf.StringValue				name = 1;		// 名称
+	google.protobuf.UInt32Value				code = 2;		// 数值
+}
+
+// 类别
+message DocumentCategory{
+	google.protobuf.StringValue				name = 1;		// 名称
+	google.protobuf.StringValue				code = 2;		// 代码
+	repeated DocumentCategory				children = 3;	// 子类别
+}
+
+// 获取文件级别和类别范围的回应
+message TagmenuResponseGetLevelAndCategory{
+	repeated DocumentSecureLevel			levels = 1;		// 所有的安全级别
+	repeated DocumentCategory				category = 2;	// 所有类别
+	optional google.protobuf.BoolValue		logined = 3;	// 是否登录
+	optional google.protobuf.BoolValue		outerAudit = 4;	// 是否具有外发审批权限
+}

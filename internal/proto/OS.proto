@@ -1,0 +1,13 @@
+syntax = "proto3";
+import "google/protobuf/wrappers.proto";
+
+option go_package = "./";
+// 操作系统信息
+message OS
+{
+	google.protobuf.StringValue		osName		= 1;		// 操作系统
+	google.protobuf.StringValue		osVersion	= 2;		// 系统版本
+	google.protobuf.StringValue		osArch		= 3;		// CPU架构
+	google.protobuf.BoolValue		inAd		= 4;		// 是否在AD域
+	google.protobuf.StringValue		adName		= 5;		// AD域服务器名
+}

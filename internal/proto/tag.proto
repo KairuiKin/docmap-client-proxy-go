@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package docmap.exchange.model;
+
+option go_package = "./docmap/exchange/model";
+
+message Tag {
+    string key = 1;
+    string value = 2;
+}

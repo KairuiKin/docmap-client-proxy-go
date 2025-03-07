@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package docmap.exchange.model;
+
+option go_package = "./docmap/exchange/model";
+
+message SubmitUserNames{
+	repeated string		userNames = 1;			// 收集到的用户姓名
+}
+
+message SubmitUserNamesResponse{
+	bool result = 1;			// 处理结果
+}

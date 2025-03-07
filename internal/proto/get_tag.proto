@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+import "tag.proto";
+
+package docmap.exchange.model;
+
+option go_package = "./docmap/exchange/model";
+
+message GetTag {
+    string filePath = 1;
+    bool accurate = 2;
+    bool remove = 3;            // 读取完毕立即删除
+}
+
+message GetTagResponse {
+    string filePath = 1;
+    repeated Tag tags = 2;
+    string entityIdentity = 3;              // 客户端无法从tags里获取entityIdentity，所以必须在这里显示传回
+    string familyIdentity = 4;              // 同上
+    bool result = 5;
+    bool encrypted = 6;                     // 已经被客户端加密过了
+}

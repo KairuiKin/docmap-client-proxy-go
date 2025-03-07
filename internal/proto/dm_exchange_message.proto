@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+import "google/protobuf/any.proto";
+
+package docmap.message.model;
+
+option go_package = "./docmap/message/model";
+
+message DMExchangeMessage {
+  uint64 id = 1;
+  string uuid = 2;
+  uint32 type = 3;
+  bool response = 4;
+  google.protobuf.Any payload = 5;
+  optional string devid = 6;
+}

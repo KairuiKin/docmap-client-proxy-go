@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+import "encrypt_method.proto";
+
+package docmap.exchange.model;
+
+option go_package = "./docmap/exchange/model";
+
+message GetOutDoorPath {
+    string sourceFilePath = 1;				// 来源文件
+	string outDoorFilePath = 2;				// 出境后的文件路径
+	optional string serverAddr = 3;			// 服务器IP地址
+}
+
+message GetOutDoorPathResponse {
+    string sourceFilePath = 1;				// 来源文件路径
+	string outDoorFilePath = 2;				// 出境后的文件路径（可能和请求的有区别）
+	enum GetOutDoorPathResult{
+		SUCCESS = 0;				// 成功
+		SOURCEFILE_NOTFOUND = 1;	// 未找到源文件
+		UNPACK_FAILED = 2;			// 解包载荷失败
+		READTAG_FAILED = 3;			// 读取来源文件的TAG失败
+		EXTRACT_ATTRS_FAILED = 4;	// 提取属性失败
+		GET_CLIENT_APP_FAILED = 5;	// 收集客户端APP信息失败
+		DENIED_BY_POLICY = 6;		// 被策略拒绝
+	}
+	GetOutDoorPathResult	result = 3;
+	EncryptMethod encryptMethod = 4;	// 加密方式
+	bool encrypted = 5;				// 是否需要加密
+}

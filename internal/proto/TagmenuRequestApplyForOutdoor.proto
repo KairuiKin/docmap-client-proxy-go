@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+import "google/protobuf/wrappers.proto";
+
+package docmap.protobuf.ipc;
+
+option go_package = "./docmap/protobuf/ipc";
+// 申请文件出边界的请求
+message TagmenuRequestApplyForOutdoor{
+	repeated google.protobuf.StringValue	file_paths = 1;		// 指定的文件集合
+	optional google.protobuf.StringValue	remark = 2;			// 描述
+}

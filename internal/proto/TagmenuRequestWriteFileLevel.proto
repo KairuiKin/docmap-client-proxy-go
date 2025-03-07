@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+import "google/protobuf/wrappers.proto";
+
+package docmap.protobuf.ipc;
+
+option go_package = "./docmap/protobuf/ipc";
+// 文件密级
+message FileLevel{
+	google.protobuf.StringValue				file_path = 1;		// 文件路径
+	google.protobuf.UInt32Value				level_code = 2;		// 密级代码
+}
+
+// 写指定文件的密级
+message TagmenuRequestWriteFileLevel{
+	repeated FileLevel						file_levels = 1;	// 要写入的文件密级
+}

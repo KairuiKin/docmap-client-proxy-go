@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+import "google/protobuf/wrappers.proto";
+
+package docmap.protobuf.ipc;
+
+option go_package = "./docmap/protobuf/ipc";
+
+message WriteFileCategoryResult{
+	google.protobuf.StringValue				file_path = 1;		// 文件路径
+	google.protobuf.Int32Value				result_code = 2;	// 写入结果（零：成功；其它：失败）
+	optional google.protobuf.StringValue	result_msg = 3;		// 失败信息
+}
+// 写指定文件的类别的回应
+message TagmenuResponseWriteFileCategory{
+	repeated WriteFileCategoryResult		results = 1;		// 读取到的结果清单
+}

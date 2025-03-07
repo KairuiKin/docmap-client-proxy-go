@@ -1,0 +1,14 @@
+syntax = "proto3";
+import "google/protobuf/wrappers.proto";
+
+option go_package = "./";
+// 应用信息
+message Application
+{
+	google.protobuf.StringValue		url		= 1;						// 文件实际下载的网址
+	google.protobuf.StringValue		displayName	= 2;					// 应用的显示名字
+	google.protobuf.StringValue		executableName	= 3;				// 可执行文件的完整带路径的文件名
+	repeated google.protobuf.StringValue	classificationType = 4;		// 本应用的所属分类
+	google.protobuf.StringValue		securityLevel	= 5;				// 安全级别
+	google.protobuf.StringValue		exeSha1		= 6;					// 可执行文件的sha1 Hash值
+}

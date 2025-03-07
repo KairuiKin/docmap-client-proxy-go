@@ -1,0 +1,12 @@
+syntax = "proto3";
+import "google/protobuf/wrappers.proto";
+
+option go_package = "./";
+// 网络地址
+message ServerAddress
+{
+	google.protobuf.StringValue		ipv4	= 1;		// ipv4 地址
+	google.protobuf.StringValue		ipv6	= 2;		// ipv6 地址
+	google.protobuf.Int32Value		port	= 3;		// 端口
+	google.protobuf.StringValue		url		= 4;		// 网址
+}

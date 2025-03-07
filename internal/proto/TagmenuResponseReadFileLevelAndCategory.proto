@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+import "google/protobuf/wrappers.proto";
+
+package docmap.protobuf.ipc;
+
+option go_package = "./docmap/protobuf/ipc";
+
+message FileLevelAndCategory{
+	google.protobuf.StringValue				file_path = 1;		// 文件路径
+	google.protobuf.UInt32Value				level_code = 2;		// 安全级别代码(为零表示不存在)
+	google.protobuf.StringValue				category_code = 3;	// 类别代码(为空表示未分类)
+	google.protobuf.UInt32Value				aod_code = 4;		// 允许外发(为零表示禁止，其它允许)
+}
+// 获取指定文件的级别和类别的回应
+message TagmenuResponseReadFileLevelAndCategory{
+	repeated FileLevelAndCategory			result = 1;			// 读取到的结果清单
+	google.protobuf.BoolValue				switch = 2;			// 显示右键菜单开关
+}

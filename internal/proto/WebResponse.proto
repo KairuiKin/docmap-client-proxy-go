@@ -1,0 +1,177 @@
+syntax = "proto3";
+import "google/protobuf/wrappers.proto";
+import "Session.proto";
+option go_package = "./";
+// 错误
+message Error
+{
+	google.protobuf.StringValue		code	= 1;		// 错误代码
+	google.protobuf.StringValue		msg	= 2;		// 错误提示
+}
+
+// 获取配置的结果
+message GetConfig
+{
+	optional google.protobuf.StringValue	agentApiServer		= 1;	// http接口服务器地址
+	optional google.protobuf.StringValue agentSocketServer	= 2;	// tcp接口服务器地址
+}
+
+// 获取安全策略
+message GetPolicy
+{
+	optional google.protobuf.StringValue	name			= 1;	// 策略版本描述
+	optional google.protobuf.Int32Value		build			= 2;	// 版本号
+	optional google.protobuf.StringValue	policyPath		= 3;	// 策略文件下载地址
+}
+
+// 获取应用分类分级信息
+message GetApplication
+{
+	optional google.protobuf.StringValue	exeSha1			= 1;	// 应用可执行文件的sha1值
+	repeated google.protobuf.StringValue	classifications		= 2;	// 本应用的所属分类
+	optional google.protobuf.StringValue	securityLevel		= 3;	// 本应用的安全级别
+}
+
+// 获取文件分类分级信息
+message GetFile
+{
+	optional google.protobuf.StringValue	fileSha1		= 1;	// 文件的sha1值
+	repeated google.protobuf.StringValue	classifications		= 2;	// 文件所属分类
+	optional google.protobuf.StringValue	securityLevel		= 3;	// 文件安全级别
+}
+
+// 生成随机数
+message GenerateRandom
+{
+	optional google.protobuf.StringValue randomServer		= 1;	// 服务端随机数
+}
+
+// 获取升级信息
+message UpgradeResult
+{
+	optional google.protobuf.Int32Value		needUpdate			= 1;	// 是否需要升级（0:不需要升级;1:可选升级;2:必须升级）
+	optional google.protobuf.UInt64Value	lastBuildNumber		= 2;	// 安装程序最新版本号数值
+	optional google.protobuf.StringValue	lastBuildString		= 3;	// 安装程序最新版本号字符串
+	optional google.protobuf.StringValue	lastDownloadUrl		= 4;	// 安装程序最新版本的下载网址
+}
+
+// 登入结果
+message LoginResult
+{
+	optional Session						Session	= 1;			// 会话
+	optional google.protobuf.StringValue	realName = 2;			// 姓名
+	optional google.protobuf.StringValue	roleName = 3;			// 角色名（暂未实现）
+	optional google.protobuf.Int32Value		outerAudit = 4;			// 审核权限：0-无权审核 1-具有审批权限
+}
+
+// 登出结果
+message LogoutResult
+{
+
+}
+
+// 文件分类信息
+message ClassificationInfo
+{
+	google.protobuf.StringValue				id = 1;				// 类别id
+	google.protobuf.StringValue				name = 2;			// 类别name|业务名称
+	google.protobuf.StringValue				code = 3;			// 类别code|业务编码
+	repeated ClassificationInfo				children = 4;		// 子节点列表
+	google.protobuf.StringValue				remark = 5;			// 描述/备注
+	google.protobuf.StringValue				createUserId = 6;	// 创建人id
+	google.protobuf.StringValue				createUserName = 7;	// 创建人账号
+	google.protobuf.StringValue				createUserRealname = 8;	// 创建人姓名
+	google.protobuf.StringValue				updateUserId = 9;	// 更新人id
+	google.protobuf.StringValue				updateUserName = 10;	// 更新人账号
+	google.protobuf.StringValue				updateUserRealname = 11;// 更新人姓名
+}
+
+// 获取文件分类信息结果
+message GetFileCategoriesResult
+{
+	repeated ClassificationInfo				categories = 1;		// 分类清单
+}
+
+// 文件密级信息
+message SecretLevelInfo
+{
+	google.protobuf.StringValue				id = 1;				// 级别id
+	google.protobuf.StringValue				name = 2;			// 级别name|业务名称
+	google.protobuf.StringValue				code = 3;			// 类别code|业务编码
+	google.protobuf.Int32Value				grade = 4;			// 密级等级 数值越大，级别越高；
+																// 数值大的覆盖数值小的；
+																//	公开：100-199
+																//	秘密：200-299
+																//	机密：300-399
+																//	绝密：400-499
+																//	其它：范围保留
+	google.protobuf.StringValue				remark = 5;			// 描述/备注
+	google.protobuf.StringValue				createUserId = 6;	// 创建人id
+	google.protobuf.StringValue				createUserName = 7;	// 创建人账号
+	google.protobuf.StringValue				createUserRealname = 8;	// 创建人姓名
+	google.protobuf.StringValue				updateUserId = 9;	// 更新人id
+	google.protobuf.StringValue				updateUserName = 10;	// 更新人账号
+	google.protobuf.StringValue				updateUserRealname = 11;// 更新人姓名
+}
+
+// 获取文件密级信息结果
+message GetFileLevelsResult
+{
+	repeated SecretLevelInfo				levels = 1;			// 密级清单
+}
+
+// 外发申请/审批的结果
+message OuterAuditResult
+{
+	google.protobuf.StringValue		auditUuid = 1;			// 外发审批流程唯一标识uuid（发起审核时，由服务端生成）
+	google.protobuf.StringValue		filePath = 2;			// 文件路径
+	google.protobuf.Int32Value		status = 3;				// 审批状态：0-待审批 1-已撤回 2-已批准 3-已驳回
+	google.protobuf.StringValue		remark = 4;				// 描述/说明/备注
+}
+
+// 结果
+message Result
+{
+	optional GetConfig get_config		= 1;		// 获取配置
+	optional GetPolicy get_policy		= 2;		// 获取安全策略
+	optional GetApplication get_application	= 3;	// 获取应用分类分级
+	optional GetFile get_file		= 4;			// 获取文件分类分级信息
+	optional GenerateRandom generate_random	= 5;	// 生成随机数
+	optional UpgradeResult	upgrade		= 6;		// 获取升级信息
+	optional LoginResult login			= 7;		// 登入
+	optional LogoutResult logout		= 8;		// 登出
+	optional LoginResult anonymous_login = 9;		// 匿名登录
+	optional GetFileCategoriesResult get_file_categories = 10;	// 获取文件类别信息
+	optional GetFileLevelsResult get_file_levels = 11;			// 获取文件密级信息
+	optional OuterAuditResult outer_audit = 12;		// 外发申请/审批结果
+}
+
+
+
+// 网络返回
+message WebResponse
+{
+	enum RequestType
+	{
+		GETCONFIG	= 0;		// 获取配置（/config/get）
+		SEND		= 1;		// 上传操作日志（/log/send）
+		SENDFILE	= 2;		// 文件方式上传操作日志（/log/sendFile）
+		GETPOLICY	= 3;		// 获取客户端安全策略（/policy/get）
+		GETAPPLICATION	= 4;		// 获取应用分类分级信息（/policy/getApplication）
+		GETFILE		= 5;		// 获取文件分类分级信息（/policy/getFile）
+		GENRANDOM	= 6;		// 生成随机数（/secure/generateRandom）
+		LOGIN		= 7;		// 客户端登录（/secure/login）
+		LOGOUT		= 8;		// 客户端登出（/secure/logout）
+		REGKEY		= 9;		// 注册加密私钥（/secure/registerKey）
+		UPGRADE		= 10;		// 获取升级信息（/upgrade）
+		ANONYMOUSLOGIN = 11;	// 匿名登录（/secure/login）
+		GETFILECATEGORIES = 12;	// 获取文件类别范围
+		GETFILELEVELS = 13;		// 获取文件密级范围
+		STARTOUTERAUDIT = 14;	// 外发申请
+		OUTERAUDIT = 15;		// 外发审批
+	}
+	RequestType	request = 1;					// 请求类型
+	google.protobuf.Int32Value	status	= 2;	// 状态（0：成功；其它：失败）
+	optional Error	error	= 3;				// 错误
+	optional Result result	= 4;				// 结果
+}

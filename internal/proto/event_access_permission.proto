@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+import "google/protobuf/any.proto";
+
+package docmap.exchange.model;
+
+option go_package = "./docmap/exchange/model";
+
+message EventAccessPermission {
+  string eventName = 1;
+  uint64 eventTime = 2;
+  google.protobuf.Any eventDetail = 3;
+}
+
+message Action{
+    string  act_name = 1;
+    string  act_value = 2;
+}
+message EventAccessPermissionResponse {
+  bool result = 1;
+  AccessType access = 2;
+  bool bubble = 3;                          // 是否气泡通知
+  string desc = 4;                          // 策略描述
+  uint32 policyId = 5;                      // 策略ID（上报事件时需要附带这个值）
+  enum AccessType {
+    allow = 0; // 允许执行
+    deny = 1; // 禁止执行
+  }
+}

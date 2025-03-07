@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+import "google/protobuf/any.proto";
+import "google/protobuf/wrappers.proto";
+
+package docmap.protobuf.ipc;
+
+option go_package = "./docmap/protobuf/ipc";
+
+// TagMenu接收到的回应
+message TagmenuResponse{
+	google.protobuf.BoolValue							result = 1;		// 处理是否成功
+	optional google.protobuf.StringValue				error = 2;		// 出错提示
+	optional google.protobuf.Int32Value					status = 3;		// 状态值
+	google.protobuf.Any									payload = 4;	// 回应载荷
+}
+

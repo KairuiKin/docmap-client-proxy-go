@@ -1,0 +1,22 @@
+syntax = "proto3";
+import "google/protobuf/wrappers.proto";
+
+option go_package = "./";
+// 文件属性
+message FileInfo
+{
+	google.protobuf.StringValue				entityIdentity	= 1;		// 文件识别ID，1个文件只有唯一值
+	repeated google.protobuf.StringValue	contentIdentities	= 2;		// 用于跟踪内容，一个文件可能有多值
+	google.protobuf.StringValue				path		= 3;		// 带路径的完整文件名
+	google.protobuf.StringValue				filename	= 4;		// 文件名
+	google.protobuf.StringValue				driveType	= 5;		// 驱动器类型
+	google.protobuf.StringValue				securityLevel	= 6;		// 安全级别
+	repeated google.protobuf.StringValue	classificationType = 7;		// 分类
+	google.protobuf.UInt64Value				createTime	= 8;		// 文件创建时间，Unix时间戳，毫秒
+	google.protobuf.UInt64Value				modifyTime	= 9;		// 文件修改时间，Unix时间戳，毫秒
+	google.protobuf.StringValue				sha1		= 10;		// 文件 sha1 值
+	google.protobuf.UInt64Value				size		= 11;		// 文件大小
+	google.protobuf.StringValue				ext		= 12;		// 文件扩展名
+	google.protobuf.StringValue				encryptChannel	= 13;		// 文件被哪个应用加密过
+	google.protobuf.Int32Value				encrypted = 14;		// 是否被客户端加密过(0:未加密;1:已加密)
+}

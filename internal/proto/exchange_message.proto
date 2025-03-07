@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+import "google/protobuf/any.proto";
+import "whoami.proto";
+
+package docmap.exchange.model;
+
+option go_package = "./docmap/exchange/model";
+
+message ExchangeMessage {
+    uint32 id = 1;
+    string uuid = 2;
+    MessageType type = 3;
+    bool response = 4;
+    WhoAmI me = 5;
+    google.protobuf.Any payload = 6;
+
+    enum MessageType {
+        UNKNOWN = 0;
+        EMPTY = 1;
+        WHOAMI = 2;
+        WHOAREU = 3;
+        EVENT_ACCESS_PERMISSION = 4;
+        REPORT_ACTION_EVENT = 5;
+        PUT_TAG = 6;
+        PUT_TAG_RESULT = 7;
+        GET_TAG = 8;
+        REDIRECT = 9;
+        DECRYPT = 10;
+        GET_OUTDOOR_PATH = 11;
+        REFRESH_PAUSE = 12;
+        SUBMIT_USERNAMES = 13;
+    }
+}

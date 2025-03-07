@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+import "google/protobuf/any.proto";
+import "google/protobuf/wrappers.proto";
+
+package docmap.protobuf.ipc;
+
+option go_package = "./docmap/protobuf/ipc";
+// TagMenu发出的请求
+message TagmenuRequest{
+	enum RequestType{
+		GetLevelAndCategory = 0;				// 获取文件级别和类别范围的请求(发送给Proxy)
+		ReadFileLevelAndCategory = 1;			// 读取指定文件的级别和类别
+		WriteFileLevel = 2;						// 写文件密级
+		WriteFileCategory = 3;					// 写文件类别
+		RemoveFolderUserDatas = 4;				// 移除目录标记
+		ApplyForOutdoor = 5;					// 申请出边界
+		AllowOutdoor = 6;						// 允许或禁止文件出边界
+	}
+	RequestType			type = 1;										// 请求类型
+	google.protobuf.Any payload = 2;									// 请求载荷
+}
+

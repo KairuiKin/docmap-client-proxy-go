@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+import "google/protobuf/wrappers.proto";
+
+package docmap.protobuf.ipc;
+
+option go_package = "./docmap/protobuf/ipc";
+// 文件类别
+message FileCategory{
+	google.protobuf.StringValue				file_path = 1;		// 文件路径
+	google.protobuf.StringValue				category_code = 2;	// 级别代码
+}
+
+// 写指定文件的类别
+message TagmenuRequestWriteFileCategory{
+	repeated FileCategory					file_categories = 1;// 指定的文件类别
+}

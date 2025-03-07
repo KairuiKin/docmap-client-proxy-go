@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package docmap.exchange.model;
+
+option go_package = "./docmap/exchange/model";
+
+enum EncryptMethod{
+    AUTO = 0;                    // 自动判断
+    ENCRYPT = 1;                 // 加密
+    UNENCRYPT = 2;               // 不加密
+}
+

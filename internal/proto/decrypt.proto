@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package docmap.exchange.model;
+
+option go_package = "./docmap/exchange/model";
+
+message Decrypt{
+	string				sourceFilePath = 1;			// 源文件路径
+	optional string		destinationFilePath = 2;	// 目标文件路径（若不给出，则不解密，仅测试源文件是否被加密了）
+	optional bool		decryptRemove = 3;			// 解密成功后自动移除来源文件（测试加密状态时忽略此字段，且仅在源文件和目标文件路径不是同一个时生效）
+}
+
+message DecryptResponse{
+	string				sourceFilePath = 1;			// 源文件路径
+	optional string		destinationFilePath = 2;	// 目标文件路径
+	enum DecryptResult{
+		SUCCESS = 0;				// 解密成功
+		NOTENCRYPTED = 1;			// 源文件未加密
+		SOURCEFILE_NOTFOUND = 2;	// 未找到源文件
+		UNPACK_FAILED = 3;			// 解包载荷失败
+		FAILED = 4;					// 解密失败
+	}
+	DecryptResult	result = 3;
+}

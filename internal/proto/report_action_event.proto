@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+import "google/protobuf/any.proto";
+
+package docmap.exchange.model;
+
+option go_package = "./docmap/exchange/model";
+
+message ReportActionEvent {
+    string eventName = 1;
+    uint64 eventTime = 2;
+    uint32 policyId = 3;
+    google.protobuf.Any eventDetail = 4;
+}
+
+message ReportEventResponse {
+    bool result = 1;
+}

@@ -1,0 +1,23 @@
+syntax = "proto3";
+import "OS.proto";
+import "Client.proto";
+import "Application.proto";
+import "Event.proto";
+import "google/protobuf/wrappers.proto";
+
+option go_package = "./";
+
+// 事件日志
+message EventLog
+{
+	google.protobuf.StringValue		logId	= 1;		// 本条电脑操作事件的日志ID，一次event对应一个logId，要保证唯一性
+	google.protobuf.Int64Value		logTime	= 2;		// 操作事件被记录时间，unix时间戳，单位毫秒
+	google.protobuf.StringValue		user	= 3;		// 登录系统的用户名
+	OS								os	= 4;			// 操作系统信息
+	Client							client	= 5;		// 监管客户端的版本信息
+	Application						application = 6;	// 应用信息
+	google.protobuf.StringValue		action	= 7;		// 对本操作监管客户端采取的处理行为: `allow`, `deny`
+	google.protobuf.StringValue		eventName = 8;		// 操作事件名，用户想执行何种操作，不同的事件名会对应不同的事件详细属性
+	google.protobuf.UInt64Value		eventTime = 9;		// 操作事件发生时间，unix时间戳，单位毫秒
+	Event							event = 10;			// 事件详细属性信息
+}

@@ -1,0 +1,11 @@
+syntax = "proto3";
+import "google/protobuf/wrappers.proto";
+
+option go_package = "./";
+// 监管客户端信息
+message Client
+{
+	google.protobuf.StringValue		name	= 1;		// 客户端名称
+	google.protobuf.StringValue		version = 2;		// 客户端版本名称
+	google.protobuf.UInt64Value		build	= 3;		// 客户端编译版本标记
+}

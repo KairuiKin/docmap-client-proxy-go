@@ -1,0 +1,9 @@
+syntax = "proto3";
+import "google/protobuf/wrappers.proto";
+option go_package = "./";
+// 会话信息
+message Session
+{
+	google.protobuf.StringValue		userId	= 1;			// 用户ID
+	google.protobuf.StringValue		accessToken	= 2;		// 令牌
+}

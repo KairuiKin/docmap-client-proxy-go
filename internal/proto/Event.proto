@@ -1,0 +1,271 @@
+syntax = "proto3";
+import "FileInfo.proto";
+import "ServerAddress.proto";
+import "google/protobuf/wrappers.proto";
+
+option go_package = "./";
+message NetFileInfo
+{
+	google.protobuf.StringValue		fileUrl = 1;		// 文件网址
+}
+
+// 上传文件
+message Upload
+{
+	google.protobuf.StringValue			protocol	= 1;		// 网络传输协议
+	FileInfo		sourceFile	= 2;		// 要上传的本地文件信息
+	repeated ServerAddress	destinationServers = 3;		// 目标服务器地址信息
+	FileInfo		destinationFile	= 4;		// 上传后远程保存文件的信息
+}
+
+// 下载文件
+message Download
+{
+	google.protobuf.StringValue	protocol	= 1;				// 网络传输协议，如ftp, http
+	repeated ServerAddress	sourceServers	= 2;				// 来源服务器地址信息
+	FileInfo				sourceFile		= 3;				// 来源文件的信息
+	FileInfo				destinationFile	= 4;				// 下载保存文件的信息
+}
+
+// 访问应用
+message Access
+{
+	google.protobuf.StringValue			protocol	= 1;		// 网络传输协议，如ftp, http
+	repeated ServerAddress				sourceServers	= 2;	// 来源服务器地址信息
+	google.protobuf.StringValue			url		= 3;			// 内容地址
+}
+
+message FileInZipInfo
+{
+	google.protobuf.StringValue			entityIdentity = 1;			// 文件识别ID（根据客户端实现方式的不同，可能和压缩来源文件的fileId相同，也可能新建一个不同的值）
+	google.protobuf.StringValue			zipPath = 2;				// 在zip文件中的路径
+	google.protobuf.UInt64Value			size = 3;					// 如果写入了新的fileID，写入后的文件大小
+	google.protobuf.StringValue			sha1 = 4;					// 如果写入了新的fileId，写入后的文件sha1值
+	google.protobuf.UInt64Value			inZipTime = 5;				// 写入zip文件的事件，Unix时间戳，毫秒
+	google.protobuf.Int32Value			encrypted = 6;				// 是否被客户端加密过(0:未加密;1:已加密)
+}
+
+message FileZipMap
+{
+	FileInfo							src = 1;					// 未压缩之前来源文件的文件信息
+	FileInZipInfo						des = 2;					// 被压缩到zip文件中之后的文件信息
+}
+
+// 压缩为zip文件
+message Zip
+{
+	repeated FileZipMap	sourceFiles	= 1;			// 被压缩的文件列表
+	repeated FileInfo	destinationFiles = 2;		// 压缩的目标zip文件(可能会被压缩软件拆分成多个文件)
+}
+
+message FileUnzipMap
+{
+	FileInZipInfo		src = 1;					// 被压缩到zip文件中的文件信息
+	FileInfo			des = 2;					// 解压后的文件信息
+}
+
+// 解压缩zip文件
+message Unzip
+{
+	repeated FileInfo		sourceFiles	= 1;		// 要解压的zip文件
+	repeated FileUnzipMap	destinationFiles = 2;	// 解压后的文件列表
+}
+
+// 粘贴复制内容
+message CopyPast
+{
+	FileInfo		sourceFile	= 1;			// 来源文件
+	FileInfo		destinationFile = 2;		// 目标文件
+	FileInfo		overwriteFile = 3;			// 覆盖文件
+}
+
+// 创建文件
+message Create
+{
+	FileInfo		destinationFile	= 1;		// 保存文件的信息
+}
+
+// 插入对象
+message InsertObject
+{
+	FileInfo		sourceFile	= 1;		// 来源文件
+	FileInfo		destinationFile	= 2;		// 保存文件的信息
+	repeated FileInfo	insertedFiles	= 3;		// 被插入的列表
+}
+
+// 删除文件
+message Delete
+{
+	FileInfo		sourceFile	= 1;		// 要被删除文件的信息
+}
+
+// 刻盘
+message CDBurn
+{
+	FileInfo	sourceFile	= 1;			// 来源文件
+	FileInfo	destinationFile = 2;		// 保存文件
+}
+
+// 改变文件属性
+message ChangeAttributes
+{
+	FileInfo							destinationFile = 1;		// 要改变属性的文件信息
+	google.protobuf.UInt32Value			attributes = 2;				// 要改变为的属性值
+}
+
+// FTP上传
+message FtpSend
+{
+	FileInfo				sourceFile	= 1;						// 要上传的本地文件信息
+	repeated ServerAddress	destinationServers = 2;					// 目标服务器地址信息
+	NetFileInfo				destinationFile	= 3;					// 上传后远程保存文件的信息
+	google.protobuf.StringValue	destinationFileTagFileId = 4;		// 上传文件的TagFileID
+}
+
+// 终止程序运行
+message Kill
+{
+	FileInfo				destinationFile = 1;					// 要终止运行的程序信息
+}
+
+// 启动程序
+message Run
+{
+	FileInfo				destinationFile = 1;					// 要运行的程序信息
+}
+
+// 开始编辑
+message BeginEdit
+{
+	FileInfo						sourceFile = 1;					// 被编辑前的文件
+	FileInfo						destinationFile = 2;			// 被编辑后的文件
+	google.protobuf.UInt64Value		beginTime = 3;					// 文件第一次被编辑的时间，Unix时间戳，毫秒
+}
+
+// 结束编辑
+message EndEdit
+{
+	FileInfo						sourceFile = 1;					// 被编辑前的文件
+	FileInfo						destinationFile = 2;			// 被编辑后的文件路径
+	google.protobuf.UInt64Value		endTime = 3;					// 文件关闭前最后一次被编辑的时间，Unix时间戳，毫秒
+}
+
+// 开始阅读
+message BeginRead
+{
+	FileInfo						sourceFile = 1;					// 被阅读前的文件
+	FileInfo						destinationFile = 2;			// 被阅读后的文件路径
+	google.protobuf.UInt64Value		beginTime = 3;					// 文件第一次被打开的时间，Unix时间戳，毫秒
+}
+
+// 结束阅读
+message EndRead
+{
+	FileInfo						sourceFile = 1;					// 被阅读前的文件
+	FileInfo						destinationFile = 2;			// 被阅读后的文件路径
+	google.protobuf.UInt64Value		endTime = 3;					// 文件最后关闭的时间，Unix时间戳，毫秒
+}
+
+// 文件TAG项
+message FileTagEntry
+{
+	google.protobuf.StringValue		key = 1;						// 键
+	google.protobuf.StringValue		value = 2;						// 值
+	google.protobuf.UInt64Value		time = 3;						// 文件创建时间，Unix时间戳，毫秒
+}
+
+// 写TAG
+message WriteTag
+{
+	FileInfo						sourceFile = 1;					// 被写TAG的文件
+	FileInfo						destinationFile = 2;			// 被写TAG的文件
+	repeated FileTagEntry			beforeFileTags = 3;				// 写TAG前文件原本的TAG集合
+	repeated FileTagEntry			afterFileTags = 4;				// 写TAG后文件新的TAG集合
+	google.protobuf.StringValue		from = 5;						// 写TAG的发起方('client'：客户；'server'：服务器)
+}
+
+// 私有事件
+message Content
+{
+	google.protobuf.UInt32Value		format = 1;						// 内容格式代码
+	google.protobuf.UInt32Value		size = 2;						// 内容大小（字节计）
+	google.protobuf.StringValue		md5 = 3;						// 内容的md5编码值
+}
+message CopyContent
+{
+	FileInfo						sourceFile = 1;					// 复制来源路径
+	repeated Content				contents = 2;					// 复制内容清单
+}
+message PasteContent
+{
+	FileInfo						destinationFile = 1;			// 粘贴目标路径
+	repeated Content				contents = 2;					// 粘贴内容清单
+}
+message RenameFolder
+{
+	google.protobuf.StringValue		srcFolder = 1;					// 来源文件夹路径
+	google.protobuf.StringValue		desFolder = 2;					// 目标文件夹路径
+}
+
+message ChangeRegistryValue
+{
+	google.protobuf.StringValue		keyPath = 1;					// 要修改的注册表键路径
+	google.protobuf.StringValue		valName = 2;					// 要修改的注册表值名
+}
+
+message PolicyAttribute
+{
+	google.protobuf.StringValue		name = 1;						// 策略属性名
+	google.protobuf.StringValue		value = 2;						// 策略属性值
+}
+
+message PermissionEvent
+{
+	google.protobuf.StringValue		eventName = 1;					// 触发策略保护的事件名
+	google.protobuf.StringValue		policyId = 2;					// 触发策略保护的策略标识符
+	google.protobuf.StringValue		policyDescription = 3;			// 触发策略保护的策略描述信息
+	repeated PolicyAttribute		eventAttributes = 4;			// 触发策略保护的事件属性集合
+}
+
+message Print
+{
+	FileInfo						destinationFile = 1;			// 打印的文档路径
+}
+
+// 事件
+message Event
+{
+	optional Upload		upload		= 1;		// 上传
+	optional Download	download	= 2;		// 下载
+	optional Access		access		= 3;		// 访问
+	optional Zip		zip		= 4;		// zip压缩
+	optional Unzip		unzip		= 5;		// zip解压缩
+	optional CopyPast	pastContent	= 6;		// 粘贴文件
+	optional CopyPast	copy		= 7;		// 复制文件
+	optional CopyPast	saveAs		= 8;		// 另存文件
+	optional CopyPast	rename		= 9;		// 重命名文件
+	optional CopyPast	edit		= 10;		// 编辑文件
+	optional Create		create		= 11;		// 创建文件
+	optional InsertObject	insertObject	= 12;		// 插入对象
+	optional InsertObject	insertFile	= 13;		// 插入文件
+	optional CopyPast	move		= 14;		// 移动文件
+	optional Delete		delete		= 15;		// 删除文件
+	optional CopyPast	encrypt		= 16;		// 加密文件
+	optional CopyPast	decrypt		= 17;		// 解密文件
+	optional CopyPast	recycle		= 18;		// 回收文件
+	optional CopyPast	restore		= 19;		// 恢复被回收的文件
+	optional CDBurn		cdBurn		= 20;		// 刻盘
+	optional ChangeAttributes changeAttr = 21;	// 改变文件属性
+	optional FtpSend	ftpSend		= 22;		// FTP上传
+	optional Kill		kill		= 23;		// 终止运行
+	optional Run		run			= 24;		// 启动运行
+	optional BeginEdit	beginEdit	= 25;		// 开始编辑
+	optional EndEdit	endEdit		= 26;		// 结束编辑
+	optional BeginRead	beginRead	= 27;		// 开始阅读
+	optional EndRead	endRead		= 28;		// 结束阅读
+	optional WriteTag	WriteTag	= 29;		// 写TAG
+	optional RenameFolder	renameFolder = 30;	// 重命名文件夹
+	optional ChangeRegistryValue changeRegVal = 31;	// 修改注册表
+	optional PermissionEvent permissionEvent = 32;	// 策略保护事件
+	optional Print	print = 33;				// 打印
+}

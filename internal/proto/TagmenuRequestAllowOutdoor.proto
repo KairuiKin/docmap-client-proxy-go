@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+import "google/protobuf/wrappers.proto";
+
+package docmap.protobuf.ipc;
+
+option go_package = "./docmap/protobuf/ipc";
+// 允许/禁止文件出边界
+message TagmenuRequestAllowOutdoor{
+	repeated google.protobuf.StringValue	file_paths = 1;		// 指定的文件集合
+	google.protobuf.UInt32Value				outdoor_code = 2;	// 出边界代码（0：禁止，其它：允许）
+	optional google.protobuf.StringValue	remark = 3;			// 描述
+}

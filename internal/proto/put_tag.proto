@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+import "tag.proto";
+
+package docmap.exchange.model;
+
+option go_package = "./docmap/exchange/model";
+
+message PutTag {
+    string filePath = 1;
+    repeated Tag tags = 2;
+    bool encrypt = 3;
+}
+
+message PutTagResponse {
+    string filePath = 1;
+    repeated Tag tags = 2;
+    enum PutTagResult{
+        SUCCESS = 0;                // 成功
+        EXPIRED = 1;                // 写入的TAG过期了
+        TIMEOUT = 2;                // 写入超时
+        UNPACK_FAILED = 3;          // 解包载荷失败
+        READ_TAG_FAILED = 4;        // 读原始TAG失败
+        ENCRYPT_FAILED = 5;         // 加密失败
+    }
+    PutTagResult result = 3;
+}
